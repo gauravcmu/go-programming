@@ -7,6 +7,9 @@ import (
 var (
         stack []string 
 	stackTop = -1
+
+	graph map[string][]string
+	visited map[string] bool 
 )
 
 func pop() string {
@@ -27,10 +30,27 @@ func push(element string)  {
 
 func main() {
 	fmt.Printf("Hello World\n")
-	push("A")
-	push("B")
-	push("C")
-	pop()
-	pop()
-	pop()
+	graph = map[string][]string{"A":{"B", "C"}, "B": {"A", "C", "D"}, "C": {"A", "B", "E"}, "D":{"B"}, "E": {"B", "C"}}
+	visited = map[string]bool{"A":false, "B":false, "C":false, "D":false, "E":false}
+	DFS(graph, "A")
 }
+
+func DFS (graph map[string][]string, v string) {
+	push(v) 
+
+	for stackTop != -1 {
+		u := pop()	
+		if visited[u] != true {
+			visited[u] = true 
+			fmt.Printf("-----Visiting %v ------\n", u)
+			for _, value := range graph[u] {
+				if visited[value] != true {
+				fmt.Printf("pushing %v\n", value)
+				push(value)
+				}
+			}
+		}
+	}
+}
+
+
